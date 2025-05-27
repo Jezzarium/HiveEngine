@@ -13,6 +13,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#include <chrono>
+
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <Core/Profiling/Profiler.h>
