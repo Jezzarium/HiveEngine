@@ -1,4 +1,5 @@
 option(HIVE_TRACK_PROFILE "Set the tracking profile (FULL, DEBUG, RELEASE)" "DEBUG")
+option(HIVE_DEBUG_UI "Enable the debug ui" "OFF")
 
 add_library(HiveCore SHARED
         Core/Event/EventManager.cpp
@@ -18,6 +19,7 @@ add_library(HiveCore SHARED
 
 
         hive.cpp
+        DebugUI/DebugUIAPI.cpp
 
 )
 target_precompile_headers(HiveCore PUBLIC hvpch.h)
@@ -42,8 +44,9 @@ else()
     message(FATAL_ERROR "Invalid value for HIVE_TRACK_PROFILE. Valid options are FULL, DEBUG, or RELEASE.")
 endif()
 
-
-
+if(HIVE_DEBUG_UI STREQUAL "ON")
+    target_compile_definitions(HiveCore PUBLIC DEBUG_UI_ENABLE)
+endif()
 
 if(NOT MSVC)
     target_compile_options(HiveCore PRIVATE -fvisibility=hidden -fvisibility-inlines-hidden)

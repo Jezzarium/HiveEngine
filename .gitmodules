@@ -7,3 +7,6 @@
 [submodule "Modules/Tracy/3rdparty/tracy"]
 	path = Modules/Tracy/3rdparty/tracy
 	url = https://github.com/wolfpld/tracy.git
+[submodule "Modules/MicroUI/3rdparty/microui"]
+	path = Modules/MicroUI/3rdparty/microui
+	url = https://github.com/rxi/microui.git
