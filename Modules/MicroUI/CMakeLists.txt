@@ -1,5 +1,7 @@
 add_library(MicroUI SHARED
     Module.cpp
+        DebugUIMicroUI.cpp
+        DebugUIMicroUI.h
 )
 
 target_link_libraries(MicroUI PRIVATE HiveCore)
