@@ -83,6 +83,12 @@ bool hive::InitModules()
         return false;
     }
 
+    auto microui_lib = g_hive.lib_manager.LoadLibrary("MicroUI");
+    if(microui_lib == -1)
+    {
+        return false;
+    }
+
     return true;
 }
 
