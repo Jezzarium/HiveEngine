@@ -66,8 +66,42 @@ namespace hive::glfw
             event.data.u16[0] = key;
             manager->EventPush(event, action == GLFW_PRESS ? EVENT_CODE_KEY_PRESSED : EVENT_CODE_KEY_RELEASED);
         });
-    }
 
+        // code for testing with mouse, need to check later because i ai generated it
+        glfwSetMouseButtonCallback(display->p_window, [](GLFWwindow *window, int button, int action, int mods)
+        {
+            auto *manager = static_cast<EventManager *>(glfwGetWindowUserPointer(window));
+            Event event;
+            double x, y;
+            glfwGetCursorPos(window, &x, &y);
+            event.data.u16[0] = button;
+            event.data.i16[1] = static_cast<int16_t>(x);
+            event.data.i16[2] = static_cast<int16_t>(y);
+
+            uint16_t code = (action == GLFW_PRESS) ? EVENT_CODE_BUTTON_PRESSED : EVENT_CODE_BUTTON_RELEASED;
+            manager->EventPush(event, code);
+
+            if (action == GLFW_RELEASE)
+                manager->EventPush(event, EVENT_CODE_BUTTON_CLICKED);
+        });
+
+        glfwSetCursorPosCallback(display->p_window, [](GLFWwindow *window, double xpos, double ypos)
+        {
+            auto *manager = static_cast<EventManager *>(glfwGetWindowUserPointer(window));
+            Event event;
+            event.data.i16[0] = static_cast<int16_t>(xpos);
+            event.data.i16[1] = static_cast<int16_t>(ypos);
+            manager->EventPush(event, EVENT_CODE_MOUSE_MOVED);
+        });
+
+        glfwSetScrollCallback(display->p_window, [](GLFWwindow *window, double xoffset, double yoffset)
+        {
+            auto *manager = static_cast<EventManager *>(glfwGetWindowUserPointer(window));
+            Event event;
+            event.data.i8[0] = static_cast<int8_t>(yoffset);
+            manager->EventPush(event, EVENT_CODE_MOUSE_WHEEL);
+        });
+    }
 
     void *display_get_native_display(Display *display)
     {

@@ -21,6 +21,8 @@
 
 #include "tiny_obj_loader.h"
 
+#include "DebugUI/DebugUIAPI.h"
+
 
 constexpr int MAX_FRAME_IN_FLIGHT = 3;
 
@@ -110,6 +112,8 @@ int main()
         ProfileCZoneName(ctx, "render");
         hive::DisplayPollEvent();
         event_manager.EventFlush();
+
+
 
 
         auto currentTime = std::chrono::high_resolution_clock::now();
