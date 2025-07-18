@@ -1,9 +1,0 @@
-[submodule "Modules/Vulkan/3rdparty/vk-bootstrap"]
-	path = Modules/Vulkan/3rdparty/vk-bootstrap
-	url = https://github.com/charles-lunarg/vk-bootstrap.git
-[submodule "Modules/GLFW/3rdparty/glfw"]
-	path = Modules/GLFW/3rdparty/glfw
-	url = https://github.com/glfw/glfw.git
-[submodule "Modules/Tracy/3rdparty/tracy"]
-	path = Modules/Tracy/3rdparty/tracy
-	url = https://github.com/wolfpld/tracy.git

@@ -1,18 +1,36 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.30)
+project(HiveProject)
 
-project(Hive)
-
-set(CMAKE_CXX_STANDARD 20)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)   # Executables & DLLs
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)   # Shared Libraries (.so/.dylib)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)   # Static Libraries (.a/.lib)
-set(CMAKE_SHARED_LIBRARY_PREFIX "")
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 
-add_subdirectory(Hive)
+if(MSVC)
+    add_compile_options(/experimental:module /Zc:preprocessor /std:c++latest)
+else()
+    if(CMAKE_VERSION VERSION_LESS "3.28.0")
+        if(CMAKE_VERSION VERSION_LESS "3.27.0")
+            set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "2182bf5c-ef0d-489a-91da-49dbc3090d2a")
+        else()
+            set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API "aa1f7df0-828a-4fcd-9afc-2dc80491aca7")
+        endif()
+        set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP 1)
+    else()
+        cmake_policy(VERSION 3.28)
+    endif()
+
+    include(FetchContent)
+    FetchContent_Declare(
+            std
+            URL "file://${LIBCXX_BUILD}/modules/c++/v1/"
+            DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+            SYSTEM
+    )
+    FetchContent_MakeAvailable(std)
+    link_libraries(std.compat std)
+endif()
+
+add_subdirectory(Extern)
+add_subdirectory(HiveEngine)
 add_subdirectory(Testbed)
-add_subdirectory(Modules/Vulkan)
-add_subdirectory(Modules/GLFW)
-add_subdirectory(Modules/Tracy)

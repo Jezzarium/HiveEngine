@@ -1,6 +1,0 @@
-set(TRACY_DELAYED_INIT ON)
-set(TRACY_MANUAL_LIFETIME ON)
-add_subdirectory(3rdparty/tracy)
-add_library(Tracy SHARED Module.cpp)
-target_link_libraries(Tracy PRIVATE HiveCore Tracy::TracyClient)
-target_compile_definitions(Tracy PRIVATE HIVE_EXPORTS)
