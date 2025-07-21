@@ -1,5 +1,5 @@
 module Core.Logging;
-
+import Core;
 namespace hive
 {
 

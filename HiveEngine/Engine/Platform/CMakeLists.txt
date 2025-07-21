@@ -1,4 +1,4 @@
-add_library(Hive.Engine.Platform STATIC)
+add_library(Hive.Engine.Platform OBJECT)
 
 add_subdirectory(Windowing)
 #file(GLOB_RECURSE MODULE_FILES *.ixx)

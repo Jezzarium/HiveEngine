@@ -18,24 +18,52 @@ namespace hive
     {
     public:
         template<typename T>
-        void AddDependency() {}
+        void AddDependency()
+        {
+            m_Dependencies.emplace_back(typeid(T).name());
+        }
+
+        const std::vector<std::string> &GetDependencies() const { return m_Dependencies; }
+    private:
+        std::vector<std::string> m_Dependencies;
     };
 
-    export class Module
+    export class ModuleBase
     {
     public:
-        Module() = default;
-        virtual ~Module() = default;
+        ModuleBase() = default;
 
-        ModuleContext Configure(); //TODO: pass a context for it to append it's dependency
+        virtual ~ModuleBase() = default;
+
+        void Configure(); //TODO: pass a context for it to append it's dependency
         void Initialize();
+
         void Shutdown();
 
+        bool CanInitialize(const std::unordered_set<std::string> &initModulesNames) const;
+
+        bool IsInitialized() const { return m_IsInitialized; }
+
+        virtual const char *GetName() const = 0;
+
     protected:
-        virtual void DoConfigure(ModuleContext& context) {}
-        virtual void DoInitialize() {}
-        virtual void DoShutdown() {}
+        virtual void DoConfigure(ModuleContext &context)
+        {
+        }
+
+        virtual void DoInitialize()
+        {
+        }
+
+        virtual void DoShutdown()
+        {
+        }
+
+    private:
+        ModuleContext m_Context;
+        bool m_IsInitialized{false};
     };
+
 
     export class ModuleRegistry
     {
@@ -46,7 +74,7 @@ namespace hive
             return instance;
         }
 
-        using ModuleFactoryFn = std::unique_ptr<Module>(*)();
+        using ModuleFactoryFn = std::unique_ptr<ModuleBase>(*)();
         void RegisterModule(ModuleFactoryFn fn);
 
         void CreateModules();
@@ -56,7 +84,7 @@ namespace hive
 
     private:
         std::vector<ModuleFactoryFn> m_ModuleFactories;
-        std::vector<std::unique_ptr<Module>> m_Modules;
+        std::vector<std::unique_ptr<ModuleBase>> m_Modules;
     };
 
     export template<typename T>
@@ -65,11 +93,17 @@ namespace hive
     public:
         ModuleAutoRegister()
         {
-            hive::ModuleRegistry::GetInstance().RegisterModule([]() -> std::unique_ptr<hive::Module>
+            hive::ModuleRegistry::GetInstance().RegisterModule([]() -> std::unique_ptr<hive::ModuleBase>
             {
                 return std::make_unique<T>();
             });
 
         }
+    };
+
+    export template<typename T>
+    class Module : public ModuleBase
+    {
+        static inline ModuleAutoRegister<T> s_AutoRegister;
     };
 }

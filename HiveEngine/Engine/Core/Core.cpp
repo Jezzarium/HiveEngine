@@ -18,13 +18,10 @@ namespace hive
     void CoreModule::DoInitialize()
     {
         m_SingletonStorer = CreateCoreSingletonStorer();
+        LogInfo(LogDefault, "Initialize CoreModule");
     }
 
     void CoreModule::DoShutdown()
     {
     }
-}
-
-namespace {
-    const hive::ModuleAutoRegister<hive::CoreModule> s_CoreModuleAutoRegister;
 }

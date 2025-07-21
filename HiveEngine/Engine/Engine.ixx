@@ -2,29 +2,27 @@ export module Engine;
 
 export import Core;
 export import Platform;
-import Profiling;
+export import Profiling;
 
 import std;
 namespace hive
 {
-    export class EngineModule : public Module
+    export class EngineModule : public Module<EngineModule>
     {
     public:
-        EngineModule()
-        {
-            std::cout << "Engine module" << std::endl;
-        }
+        const char *GetName() const override { return "EngineModule"; }
 
     protected:
         void DoConfigure(ModuleContext& context) override
         {
             context.AddDependency<CoreModule>();
             context.AddDependency<PlatformModule>();
+            context.AddDependency<ProfilingModule>();
+        }
+
+        void DoInitialize() override
+        {
+            LogInfo(LogDefault, "Engine module initialized");
         }
     };
-}
-
-namespace
-{
-    const hive::ModuleAutoRegister<hive::EngineModule> s_EngineModule;
 }

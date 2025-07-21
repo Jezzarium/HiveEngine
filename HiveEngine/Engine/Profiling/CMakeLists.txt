@@ -1,4 +1,4 @@
-add_library(Hive.Engine.Profiling STATIC)
+add_library(Hive.Engine.Profiling OBJECT)
 
 #file(GLOB_RECURSE MODULE_FILES *.ixx)
 #file(GLOB_RECURSE SOURCE_FILES *.cpp)

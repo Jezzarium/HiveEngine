@@ -3,6 +3,7 @@ import Engine;
 int main()
 {
     hive::ModuleRegistry::GetInstance().CreateModules();
+    hive::ModuleRegistry::GetInstance().ConfigureModules();
     hive::ModuleRegistry::GetInstance().InitModules();
 
     hive::ConsoleLogger logger;
