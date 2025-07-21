@@ -9,10 +9,8 @@ namespace hive
     export class PlatformModule : public Module<PlatformModule>
     {
     public:
-        PlatformModule()
-        {
-            std::cout << "Platform module" << std::endl;
-        }
+        static std::string_view GetStaticClassName() { return "PlatformModule"; }
+
         const char * GetName() const override { return "PlatformModule"; }
 
     protected:
@@ -23,10 +21,8 @@ namespace hive
 
         void DoInitialize() override
         {
-            LogInfo(LogDefault, "Initialize PlatformModule");
+            LogInfo(LogDefault, "PlatformModule");
         }
-
-    public:
     };
 
 }

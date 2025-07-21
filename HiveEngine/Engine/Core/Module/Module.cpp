@@ -56,53 +56,50 @@ namespace hive
             module->Configure();
         }
 
-        //TODO: do some stuff here
-        //How to sort them by dependency
+        std::unordered_set<std::string> initializedModules;
+        std::vector<std::unique_ptr<ModuleBase>> orderedModules;
+
+        std::vector<std::unique_ptr<ModuleBase>> remainingModules = std::move(m_Modules);
+
+        while (!remainingModules.empty())
+        {
+            bool progress = false;
+
+            for (auto it = remainingModules.begin(); it != remainingModules.end(); ++it)
+            {
+                if ((*it)->CanInitialize(initializedModules))
+                {
+                    initializedModules.insert((*it)->GetName());
+                    orderedModules.push_back(std::move(*it));
+                    remainingModules.erase(it);
+                    progress = true;
+                    break;
+                }
+            }
+
+            if (!progress)
+            {
+                // Circular dependency or unsatisfiable constraint
+                throw std::runtime_error("Unresolvable module dependency detected.");
+            }
+        }
+
+        m_Modules = std::move(orderedModules);
     }
 
     void ModuleRegistry::InitModules()
     {
-        std::unordered_set<std::string> initModulesNames;
-        std::vector<std::string> modulesToInit;
-
-        for (const auto& module : m_Modules)
+        for (auto &module : m_Modules)
         {
-            modulesToInit.push_back(module->GetName());
+            module->Initialize();
         }
-
-        while (!modulesToInit.empty())
-        {
-            bool anyModuleInitialized = false;
-
-            for (const auto& module : m_Modules)
-            {
-                const std::string& name = module->GetName();
-
-                // Only consider modules still in the list
-                auto it = std::find(modulesToInit.begin(), modulesToInit.end(), name);
-                if (it != modulesToInit.end() && module->CanInitialize(initModulesNames))
-                {
-                    module->Initialize();
-                    initModulesNames.insert(name);
-                    modulesToInit.erase(it);
-                    anyModuleInitialized = true;
-                    break; // Optional: restart loop after initializing a module
-                }
-            }
-
-            if (!anyModuleInitialized)
-            {
-                throw std::runtime_error("Circular dependency detected or missing dependency.");
-            }
-        }
-
     }
 
     void ModuleRegistry::ShutdownModules()
     {
-        for (const auto& module : m_Modules)
+        for (int i = m_Modules.size(); i > 0; i--)
         {
-            module->Shutdown();
+            m_Modules[i]->Shutdown();
         }
     }
 }

@@ -10,6 +10,7 @@ namespace hive
     export class EngineModule : public Module<EngineModule>
     {
     public:
+        static std::string_view GetStaticClassName() { return "EngineModule"; }
         const char *GetName() const override { return "EngineModule"; }
 
     protected:
@@ -22,7 +23,7 @@ namespace hive
 
         void DoInitialize() override
         {
-            LogInfo(LogDefault, "Engine module initialized");
+            LogInfo(LogDefault, "EngineModule");
         }
     };
 }

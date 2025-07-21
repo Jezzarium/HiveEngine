@@ -10,4 +10,6 @@ int main()
     auto logger_id = hive::LogManager::GetInstance().RegisterLogger(&logger, &hive::ConsoleLogger::Log);
 
     hive::LogManager::GetInstance().UnregisterLogger(logger_id);
+
+    hive::ModuleRegistry::GetInstance().ShutdownModules();
 }

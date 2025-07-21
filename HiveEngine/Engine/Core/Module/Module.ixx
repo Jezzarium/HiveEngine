@@ -20,7 +20,7 @@ namespace hive
         template<typename T>
         void AddDependency()
         {
-            m_Dependencies.emplace_back(typeid(T).name());
+            m_Dependencies.emplace_back(T::GetStaticClassName());
         }
 
         const std::vector<std::string> &GetDependencies() const { return m_Dependencies; }

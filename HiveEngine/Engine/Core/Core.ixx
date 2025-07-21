@@ -14,6 +14,7 @@ namespace hive
     export class CoreModule : public Module<CoreModule>
     {
     public:
+        static std::string_view GetStaticClassName() { return "CoreModule"; }
         const char * GetName() const override { return "CoreModule"; }
     protected:
         void DoInitialize() override;
@@ -21,6 +22,8 @@ namespace hive
 
     private:
         std::unique_ptr<SingletonStorerBase> m_SingletonStorer;
+        ConsoleLogger m_ConsoleLogger;
+        LogManager::LoggerId m_ConsoleLoggerId;
     };
 }
 
