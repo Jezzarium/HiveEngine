@@ -1,3 +1,5 @@
+Hive Engine supports Windows, macOS and linux.
+
 # Build steps
 
 1. Clone the repository
