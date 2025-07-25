@@ -1,5 +1,5 @@
 export module Core.Memory;
-import Core.Utils;
+import Core.Singleton;
 import Core.Functor;
 import std;
 
@@ -19,6 +19,7 @@ namespace hive
     public:
         using AllocFunctor = Functor<void, unsigned int, std::source_location, void*>;
         using FreeFunctor = Functor<void, void*>;
+        using MemoryCallbackId = unsigned int;
 
 
         MemoryManager();
@@ -27,11 +28,13 @@ namespace hive
         [[nodiscard]] void* Allocate(unsigned int size, std::source_location loc);
         void Deallocate(void* p);
 
-        void RegisterCallbacks(AllocFunctor&& functorAlloc, FreeFunctor&& functorFree);
+        [[nodiscard]] MemoryCallbackId RegisterCallbacks(AllocFunctor &&functorAlloc, FreeFunctor &&functorFree);
+        void RemoveCallbacks(MemoryCallbackId id);
 
     private:
         std::pmr::unordered_set<AllocationHeader*> m_Allocations;
-        std::vector<std::pair<AllocFunctor, FreeFunctor>> m_MemoryCallbacks;
+        std::vector<std::tuple<MemoryCallbackId, AllocFunctor, FreeFunctor>> m_MemoryCallbacks;
+        unsigned int m_IdCounter{0};
     };
 
     template <typename T>

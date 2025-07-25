@@ -5,7 +5,7 @@ namespace hive
 {
     export struct SingletonStorerBase
     {
-
+        virtual ~SingletonStorerBase() = default;
     };
 
     export template<typename T>
@@ -32,7 +32,6 @@ namespace hive
     {
     public:
         ModuleBase() = default;
-
         virtual ~ModuleBase() = default;
 
         void Configure(); //TODO: pass a context for it to append it's dependency

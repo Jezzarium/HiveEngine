@@ -97,7 +97,7 @@ namespace hive
 
     void ModuleRegistry::ShutdownModules()
     {
-        for (int i = m_Modules.size(); i > 0; i--)
+        for (int i = m_Modules.size() - 1; i >= 0; i--)
         {
             m_Modules[i]->Shutdown();
         }

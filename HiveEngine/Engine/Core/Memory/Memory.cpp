@@ -37,7 +37,7 @@ namespace hive
 
         void* offset_ptr = static_cast<void*>(static_cast<char*>(ptr) + sizeof(AllocationHeader));
 
-        for (auto& [allocFn, freeFn] : m_MemoryCallbacks)
+        for (auto& [id, allocFn, freeFn] : m_MemoryCallbacks)
         {
             allocFn(size, loc, offset_ptr);
         }
@@ -47,7 +47,7 @@ namespace hive
 
     void MemoryManager::Deallocate(void* ptr)
     {
-        for (auto& [allocFn, freeFn] : m_MemoryCallbacks)
+        for (auto& [id, allocFn, freeFn] : m_MemoryCallbacks)
         {
             freeFn(ptr);
         }
@@ -61,9 +61,28 @@ namespace hive
         std::free(original_ptr);
     }
 
-    void MemoryManager::RegisterCallbacks(AllocFunctor&& functorAlloc, FreeFunctor&& functorFree)
+    MemoryManager::MemoryCallbackId MemoryManager::RegisterCallbacks(AllocFunctor &&functorAlloc,
+                                                                     FreeFunctor &&functorFree)
     {
-        m_MemoryCallbacks.emplace_back(std::move(functorAlloc), std::move(functorFree));
+        m_MemoryCallbacks.emplace_back(std::make_tuple(m_IdCounter, std::move(functorAlloc), std::move(functorFree)));
+        return m_IdCounter++;
+    }
+
+    void MemoryManager::RemoveCallbacks(MemoryCallbackId id)
+    {
+        for (int i = 0; i < m_MemoryCallbacks.size(); i++)
+        {
+            const auto callback = m_MemoryCallbacks[i];
+            const auto callbackId = std::get<MemoryCallbackId>(callback);
+
+            if (callbackId == id)
+            {
+                m_MemoryCallbacks.erase(m_MemoryCallbacks.begin() + i);
+                return;
+            }
+        }
+
+        //TODO: assert the id was not found
     }
 }
 

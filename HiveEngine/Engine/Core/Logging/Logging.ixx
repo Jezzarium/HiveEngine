@@ -1,5 +1,5 @@
 export module Core.Logging;
-import Core.Utils;
+import Core.Singleton;
 import Core.Functor;
 import std;
 

@@ -11,15 +11,36 @@ namespace hive
         const char *GetName() const override { return "ProfilingModule"; }
 
     protected:
-        void DoConfigure(ModuleContext &context) override
-        {
-            context.AddDependency<CoreModule>();
-        }
+        void DoConfigure(ModuleContext &context) override;
+        void DoInitialize() override;
+        void DoShutdown() override;
 
-        void DoInitialize() override
-        {
-            LogInfo(LogDefault, "ProfilingModule");
-        }
+    private:
+        void CreateSingletonStorer();
+
+        SingletonStorerBase* m_SingletonStorer{nullptr};
+        MemoryManager::MemoryCallbackId m_MemoryCallbackId{0};
     };
 
+
+
+
+
+#if PROFILING_ENABLED
+    export class ScopedProfiler
+    {
+    public:
+        explicit ScopedProfiler(std::source_location location = std::source_location::current());
+        ~ScopedProfiler();
+    };
+
+#else
+    export class ScopedProfiler
+    {
+    public:
+        explicit inline constexpr ScopedProfiler() noexcept {};
+        constexpr inline ~ScopedProfiler() noexcept = default;
+    };
+
+#endif
 }

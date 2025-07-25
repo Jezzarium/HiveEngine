@@ -6,7 +6,6 @@ namespace hive
     {
         LogManager m_LogManager;
         MemoryManager m_MemoryManager;
-
     };
 
     std::unique_ptr<SingletonStorerBase> CreateCoreSingletonStorer()
@@ -26,5 +25,6 @@ namespace hive
     void CoreModule::DoShutdown()
     {
         LogManager::GetInstance().UnregisterLogger(m_ConsoleLoggerId);
+        m_SingletonStorer.reset();
     }
 }

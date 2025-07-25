@@ -7,6 +7,7 @@ export import Core.Assert;
 export import Core.Module;
 export import Core.ImplOwner;
 export import Core.Functor;
+export import Core.Singleton;
 
 import std;
 namespace hive
@@ -21,9 +22,9 @@ namespace hive
         void DoShutdown() override;
 
     private:
-        std::unique_ptr<SingletonStorerBase> m_SingletonStorer;
+        std::unique_ptr<SingletonStorerBase> m_SingletonStorer{nullptr};
         ConsoleLogger m_ConsoleLogger;
-        LogManager::LoggerId m_ConsoleLoggerId;
+        LogManager::LoggerId m_ConsoleLoggerId{0};
     };
 }
 
