@@ -1,3 +1,6 @@
 [submodule "Extern/git/glfw"]
 	path = Extern/git/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "Extern/wrapper/tracy/3rdparty/tracy"]
+	path = Extern/wrapper/tracy/3rdparty/tracy
+	url = https://github.com/wolfpld/tracy.git

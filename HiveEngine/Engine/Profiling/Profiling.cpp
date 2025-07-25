@@ -1,5 +1,5 @@
 module Profiling;
-import HiveTracy;
+import Hive.Tracy;
 
 namespace hive
 {
@@ -19,18 +19,21 @@ namespace hive
 #if defined(PROFILING_ENABLED)
         LogInfo(LogDefault, "ProfilingModule");
         CreateSingletonStorer();
+        Tracy::StartupProfiler();
 #endif
     }
 
     void ProfilingModule::DoShutdown()
     {
+#if defined(PROFILING_ENABLED)
+        Tracy::ShutdownProfiler();
         MemoryManager::GetInstance().RemoveCallbacks(m_MemoryCallbackId);
         hive_delete(m_SingletonStorer);
+#endif
     }
 
     struct ProfilingSingletonStorer : SingletonStorer<ProfilingSingletonStorer>
     {
-        PROFILING_ONLY(HiveTracy::HiveTracyProfiler m_tracyProfiler);
     };
 
     void ProfilingModule::CreateSingletonStorer()
