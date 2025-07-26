@@ -1,5 +1,4 @@
 module Profiling;
-import Hive.Tracy;
 
 namespace hive
 {
@@ -26,7 +25,7 @@ namespace hive
     void ProfilingModule::DoShutdown()
     {
 #if defined(PROFILING_ENABLED)
-        Tracy::ShutdownProfiler();
+        Tracy::StartupProfiler();
         MemoryManager::GetInstance().RemoveCallbacks(m_MemoryCallbackId);
         hive_delete(m_SingletonStorer);
 #endif
@@ -42,13 +41,22 @@ namespace hive
     }
 
 #if defined(PROFILING_ENABLED)
-    ScopedProfiler::ScopedProfiler(std::source_location location)
+    ScopedProfiler::ScopedProfiler(const char *name, std::source_location location)
     {
+        m_ZoneLocationData = {
+            name != nullptr ? name : location.function_name(),
+            location.function_name(),
+            location.file_name(),
+            location.line(),
+            0
+        };
 
+        m_ZoneContext = Tracy::BeginZone(&m_ZoneLocationData);
     }
 
     ScopedProfiler::~ScopedProfiler()
     {
+        Tracy::EndZone(m_ZoneContext);
     }
 #endif
 }
