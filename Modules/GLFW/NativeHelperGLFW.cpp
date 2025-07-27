@@ -53,3 +53,20 @@ void* hive::glfw::GetNativeWindow(GLFWwindow* window)
     return glfwGetWin32Window(window);
 }
 #endif
+
+
+#ifdef HIVE_PLATFORM_MACOS
+#define GLFW_EXPOSE_NATIVE_COCOA
+#include "GLFW/glfw3native.h"
+
+void* hive::glfw::GetNativeDisplay(GLFWwindow* window)
+{
+    // not needed for macos as NSWindow contains everything we need
+    return nullptr;
+}
+
+void* hive::glfw::GetNativeWindow(GLFWwindow* window)
+{
+    return glfwGetCocoaWindow(window);
+}
+#endif

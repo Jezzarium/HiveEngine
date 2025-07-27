@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <cstdarg>
+#include <iomanip>
 // hive::LogManager::LoggerID hive::LogManager::AddCallback(LoggerCallback callback)
 // {
 //     const LoggerID id = id_counter;

@@ -62,4 +62,26 @@ void hive::vk::vulkan_create_surface(Display *display, VkInstance instance, VkSu
 }
 #endif
 
+#ifdef HIVE_PLATFORM_MACOS
+#include "Display/DisplayAPI.h"
+#include "SurfaceFactory.h"
+#include "MetalHelper.h"
+#include "vulkan/vulkan_metal.h"
 
+void hive::vk::vulkan_create_surface(Display *display, VkInstance instance, VkSurfaceKHR*surface)
+{
+    void* window = DisplayGetNativeWindow(display);
+    void* metalLayer = create_metal_layer_for_nswindow(window);
+
+    VkMetalSurfaceCreateInfoEXT create_info{};
+    create_info.sType = VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT;
+    create_info.pNext = nullptr;
+    create_info.flags = 0;
+    create_info.pLayer = metalLayer;
+
+    auto result = vkCreateMetalSurfaceEXT(instance, &create_info, nullptr, surface);
+
+    if (result != VK_SUCCESS)
+        HIVE_LOG_ERROR("Failed to create metal surface! Result: %d", result);
+}
+#endif

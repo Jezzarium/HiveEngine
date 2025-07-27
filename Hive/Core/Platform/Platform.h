@@ -15,3 +15,7 @@ namespace hive
 #ifdef __linux__
 #define HIVE_PLATFORM_LINUX
 #endif
+
+#ifdef __APPLE__
+#define HIVE_PLATFORM_MACOS
+#endif

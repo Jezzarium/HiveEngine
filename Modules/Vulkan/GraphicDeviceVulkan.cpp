@@ -1,5 +1,7 @@
 #include "SurfaceFactory.h"
 #include "GraphicDeviceVulkan.h"
+#include <dlfcn.h>
+#include <vulkan/vulkan.h>
 
 
 //TODO error handling. Need to free the allocated resources if something fail
@@ -21,7 +23,9 @@ hive::gfx::DeviceHandle* hive::vk::vulkan_device_create(const gfx::DeviceDesc& c
 
     if (!instance_ret)
     {
-        HIVE_LOG_ERROR("Failed to create vulkan instance");
+        auto error = instance_ret.error();
+        HIVE_LOG_ERROR("Failed to create vulkan instance. Error code: %d, Message: %s",
+                       static_cast<int>(error.value()), error.message().c_str());
         vk::vulkan_device_destroy(device); //To free the already allocated memory
         return nullptr;
     }

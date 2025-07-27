@@ -10,6 +10,7 @@ add_library(HiveCore SHARED
         Core/Object/Object.cpp
         Core/Platform/Platform_Linux.cpp
         Core/Platform/Platform_Windows.cpp
+        Core/Platform/Platform_MacOS.cpp
         Core/Profiling/Profiler.cpp
 
         Graphic/GFX.cpp
@@ -48,4 +49,3 @@ endif()
 if(NOT MSVC)
     target_compile_options(HiveCore PRIVATE -fvisibility=hidden -fvisibility-inlines-hidden)
 endif ()
-
